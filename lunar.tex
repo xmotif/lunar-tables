@@ -1,0 +1,356 @@
+\documentclass[letterpaper]{article}
+
+\usepackage[margin=1.0in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{ {gfx/} }
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\input{lib/greatcircle.tex}
+\usepackage{tabularx}
+\usepackage{indentfirst}
+
+\DeclareMathOperator{\hav}{hav}
+\usepackage{mathtools}
+\newtagform{fn}{(}{)\footnotemark}
+
+\numberwithin{equation}{section}
+
+\title{Equations of Stark's Lunar Distance Tables}
+\author{Ver. 1.1}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+\section{Deriving Stark's Lunar Distance Formula}
+
+	\begin{figure}[h]
+	\centering
+	\tdplotsetmaincoords{60}{135}
+	\begin{tikzpicture}[tdplot_main_coords,scale=4,declare function={R=1;}]
+		\footnotesize
+
+		\draw plot [mark=*, mark size=0.3] coordinates{(0,0,0)}
+			node[above right] {observer};
+
+		% axes
+		\draw[dashed] (0,0,0) -- (1,0,0)
+			node[left] {H};
+		\draw[dashed] (0,0,0) -- (0,1,0)
+			node[right] {O};
+		\draw[dashed] (0,0,0) -- (0,0,1)
+			node[above] {Z};
+
+		% horizon
+		\tdplotsetrotatedcoords{0}{0}{0};
+		\draw[tdplot_rotated_coords] (1,0,0) arc (0:90:1)
+			node[midway, below] {observer's horizon};
+		 
+		\tdplotsetrotatedcoords{90}{90}{180};
+		\draw[tdplot_rotated_coords] (1,0,0) arc (0:90:1);
+		 
+		\tdplotsetrotatedcoords{0}{90}{90};
+		\draw[tdplot_rotated_coords] (1,0,0) arc (0:90:1);
+
+		% apparent star
+		\tdplotsetcoord{s}{1}{55}{0}
+		\draw plot [mark=*, mark size=0.3] (s)
+			node[left] {s};
+		% true star
+		\tdplotsetcoord{S}{1}{60}{0}
+		\draw plot [mark=*, mark size=0.3] (S)
+			node[left] {S};
+		% apparent moon
+		\tdplotsetcoord{m}{1}{50}{90}
+		\draw plot [mark=*, mark size=0.3] (m)
+			node[right] {m};
+		% true moon
+		\tdplotsetcoord{M}{1}{45}{90}
+		\draw plot [mark=*, mark size=0.3] (M)
+			node[right] {M};
+
+		% apparent distance
+		\GreatCircleArc{theta1=35,phi1=0,theta2=40,phi2=90}
+		% true distance
+		\GreatCircleArc{theta1=30,phi1=0,theta2=45,phi2=90}
+	
+	\end{tikzpicture}
+	\caption{Lunar Distance}
+	\end{figure}
+	
+	From the spherical law of cosines:
+	\begin{equation}
+	\cos Z = \frac{\cos \mathit{SM} - \cos \mathit{ZS} \cos \mathit{ZM}}{\sin \mathit{ZS} \sin \mathit{ZM}} = \frac{\cos \mathit{sm} - \cos \mathit{Zs} \cos \mathit{Zm}}{\sin \mathit{Zs} \sin \mathit{Zm}}
+	\end{equation}
+	\begin{equation}
+	\cos Z = \frac{\cos \mathit{SM} - \sin \mathit{HS} \sin \mathit{OM}}{\cos \mathit{HS} \cos \mathit{OM}} = \frac{\cos \mathit{sm} - \sin \mathit{Hs} \sin \mathit{Om}}{\cos \mathit{Hs} \cos \mathit{Om}}
+	\end{equation}
+	
+	\setlength\tabcolsep{2pt}
+	\begin{tabularx}{\textwidth}{@{}llX@{}}
+	Let
+	  & $M$ & be the true altitude of the Moon \\
+	  & $m$ & be the apparent altitude of the Moon \\
+	  & $S$ & be the true altitude of the Sun or star \\
+	  & $s$ & be the apparent altitude of the Sun or star \\
+	  & $D$ & be the true lunar distance \\
+	  & $d$ & be the apparent lunar distance \\
+	\end{tabularx}
+	
+	\begin{equation}
+	\frac{\cos D - \sin S \sin M}{\cos S \cos M} = \frac{\cos d - \sin s \sin m}{\cos s \cos m}
+	\end{equation}
+	\begin{equation}
+	\cos D = \frac{\cos d - \sin s \sin m}{\cos s \cos m}\cos S \cos M + \sin S \sin M
+	\end{equation}
+
+	Apply the difference identity: $\sin s \sin m = \cos(m-s) - \cos s \cos m$
+	
+	\begin{equation}
+	\begin{split}
+	\cos D & = \frac{\cos d - \cos(m-s) + \cos s \cos m}{\cos s \cos m}\cos S \cos M + \sin S \sin M \\
+	& = \left(\frac{\cos d - \cos(m-s)}{\cos s \cos m} + 1\right) \cos S \cos M + \sin S \sin M \\
+	& = \frac{\cos d - \cos(m-s)}{\cos s \cos m} \cos S \cos M + \cos S \cos M + \sin S \sin M
+	\end{split}
+	\end{equation}
+
+	Apply the sum identity: $\cos (M-S) = \cos S \cos M + \sin S \sin M$
+
+	\begin{equation}
+	\cos D = \frac{\cos d - \cos(m-s)}{\cos s \cos m} \cos S \cos M + \cos (M-S)
+	\end{equation}
+
+	Apply the sum-to-product identity:
+
+	\begin{equation}
+	\begin{split}
+	\cos D & = \frac{-2 \sin \left( \frac{d + (m-s)}{2} \right) \sin \left( \frac{d - (m-s)}{2} \right) }{\cos s \cos m} \cos S \cos M + \cos (M-S) \\
+	& = -2 \sin \left( \tfrac{d + (m-s)}{2} \right) \sin \left( \tfrac{d - (m-s)}{2} \right) \frac{\cos S \cos M}{\cos s \cos m}  + \cos (M-S)
+	\end{split}
+	\end{equation}
+
+	Apply identity: $\sin\left(\tfrac{\theta}{2}\right) = \pm \sqrt{\hav \theta}$
+
+	\begin{equation}
+	\cos D = \pm 2 \sqrt{\hav (d + (m-s))} \sqrt{\hav (d - (m-s))} \frac{\cos S \cos M}{\cos s \cos m}  + \cos (M-S)
+	\end{equation}
+
+	Apply identity: $\cos (\theta) = 1 - 2 \hav (\theta)$
+
+	\begin{equation}
+	1 - 2 \hav D = \pm 2 \sqrt{\hav (d + (m-s)) \cdot \hav (d - (m-s))} \frac{\cos S \cos M}{\cos s \cos m}  + 1 - 2 \hav (M-S)
+	\end{equation}
+
+	Simplify, arriving at Stark's formula:
+
+	\begin{equation}
+	\hav D = \sqrt{\hav (d + (m-s)) \cdot \hav (d - (m-s))} \frac{\cos S \cos M}{\cos s \cos m} + \hav (M-S)
+	\end{equation}
+
+\clearpage \section{Table 1: Combined Dip and Semidiameter}
+	% Ideally semidiameter would be applied after refraction, because refraction changes with altitude.
+
+	Stars and planets have negligible semidiameter and are only corrected for dip. Let $d$ be the correction for dip in arcminutes, and $h$ be height of eye in feet.
+	\usetagform{fn} \begin{equation}
+	d = -0.97' \sqrt{h}
+	\end{equation} \usetagform{default} \footnotetext{The Nautical Almanac, Explanation, section 16}
+
+	The Sun's semidiameter changes throughout the year due to the eccentricity of the Earth's orbit.
+	\setlength\tabcolsep{2pt}
+	\begin{tabularx}{\textwidth}{@{}llX@{}}
+	As an approximation, let $s_s$ be
+	  & $15.9'$ & during the months of April-September, and \\
+	  & $16.2'$ & during the months of October-March.\footnote{Stark Tables, pg. 12} \\
+	\end{tabularx}
+	Let $c_s$ be the Sun's correction for dip and semidiameter in arcminutes.
+	\begin{equation}
+	\begin{array}{@{}rl@{}}
+	\text{Upper limb:} & c_s = d - s_s \\
+	\text{Lower limb:} & c_s = d + s_s
+	\end{array}
+	\end{equation}
+
+	The Moon's horizontal parallax may be obtained from the Nautical Almanac daily pages. Let $\mathit{HP}$ be the Moon's horizontal parallax, $s_{mg}$ the Moon's apparent geocentric semidiameter, and $c_m$ the Moon's correction for dip and semidiameter, in arcminutes.
+	\usetagform{fn} \begin{equation}
+	s_{mg} = 60 \arcsin (0.272481 \sin \mathit{HP})
+	\end{equation} \usetagform{default} \footnotetext{Astronomical Algorithms, pg. 390}
+	\begin{equation}
+	\begin{array}{@{}rl@{}}
+	\text{Upper limb:} & c_m = d - s_{mg} \\
+	\text{Lower limb:} & c_m = d + s_{mg}
+	\end{array}
+	\end{equation}
+	Let $M_S$ and $S_S$ be the sextant altitudes of the Moon and body corrected for index error. The combined dip and semidiameter corrections are applied to yield the apparent altitudes of the Moon and body in degrees.
+	\begin{align}
+		M_{\!A} &= M_{\!S} + 60 c_m \\
+		S_{\!A} &= S_{\!S} + 60 c_s
+	\end{align}
+	
+\clearpage \section{Tables 2 and 3: Refraction, Parallax, And Q}
+	Saturn, Jupiter, and the stars are at such a great distance that they have negligible parallax, and are only corrected for refraction. Let $c_r$ be the correction for refraction in arcminutes, and $H_{\!A}$ be a generic body's apparent altitude in degrees.
+
+	% note: pressure, temperature. bowditch vol ii tables 27, 28
+	\usetagform{fn} \begin{equation}
+	c_r = R - 0.06 \sin(14.7 R + 13)
+	\end{equation} \usetagform{default} \footnotetext{Astronomical Algorithms, pg. 106}
+	\begin{equation}
+	R = \cot\left(H_{\!A} + \frac{7.31}{H_{\!A} + 4.4}\right)
+	\end{equation}
+
+	The Moon has by far the largest maximum parallax of any celestial body due to its close proximity to the Earth. The lunar parallax in altitude \textit{PA} is the difference in angle between the line from the observer to the Moon, and the line from the center of the Earth to the Moon. The maximum value of \textit{PA} occurs when the Moon is on the observer's horizon, known as horizontal parallax \textit{HP}. Because the Earth-Moon distance varies throughout the month and year, the Nautical Almanac gives \textit{HP} in arcminutes for each hour.
+	% note: oblateness (Ho.en.pdf, http://navsoft.com/html/corrections_to_a_sextant_altit.html)
+	
+	\begin{figure}[h]
+	\centering
+	\pgfmathsetmacro{\Re}{1.25}		% earth radius
+	\pgfmathsetmacro{\Rm}{0.273*\Re}	% moon radius
+	\pgfmathsetmacro{\D}{5}			% distance from center of earth to center of moon
+	\pgfmathsetmacro{\Doh}{sqrt(\D^2 - \Re^2)}	% distance from observer to lower limb of moon at horizon
+	\pgfmathsetmacro{\Ha}{45}		% hour angle of moon at altitude
+	\pgfmathsetmacro{\Xm}{\D*cos(\Ha)}	% X of moon above horizon
+	\pgfmathsetmacro{\Ym}{\D*sin(\Ha)}	% Y of moon above horizon
+	\pgfmathsetmacro{\HP}{asin(\Re/\Doh)}
+	\pgfmathsetmacro{\H}{atan((\Ym-\Re)/\Xm)}
+	\begin{tikzpicture}
+		\footnotesize
+
+		% earth
+		\draw[fill=gray!20] (0,0) circle (\Re)
+			node[left, yshift=-10pt] {Earth};
+		\draw (0,0) -- (90:\Re)
+			%node[midway, left] {$R$}
+			node[above, xshift=-5pt] {Ob};
+		\draw[fill=black] (0,\Re) circle (1pt);
+
+		% moon at horizon
+		\draw[fill=gray!20] (\Doh, \Re) circle (\Rm)
+			node[right, text width=2cm, align=center] {Moon at horizon};
+		\draw (90:\Re) -- (\Doh, \Re);
+		\draw (0, 0) -- (\Doh, \Re)
+			node[midway, below] {$d$};
+		\draw [domain=0:\HP] plot ({\Doh-cos(\x)}, {\Re-sin(\x)})
+			node[left, yshift=3pt] {$\mathit{HP}$};
+
+		% moon above horizon
+		\draw[fill=gray!20] (\Xm, \Ym) circle (\Rm)
+			node[right, text width=2.5cm, align=center] {Moon above horizon};
+		\draw (90:\Re) -- (\Xm, \Ym);
+		\draw (0, 0) -- (\Xm, \Ym)
+			node[midway, below] {$d$};
+		\draw [domain=0:\H] plot ({cos(\x)}, {\Re+sin(\x)})
+			node[right, yshift=-4pt, xshift=2pt] {$H$};
+		\draw [domain=\H:\Ha] plot ({\Xm-1.5*cos(\x)}, {\Ym-1.5*sin(\x)})
+			node[left, xshift=-3pt, yshift=-3pt] {$\mathit{PA}$};
+	\end{tikzpicture}
+	\caption{Lunar Parallax}
+	\end{figure}
+
+	\usetagform{fn} \begin{equation}
+		\mathit{PA}=\mathit{HP} \cos H_{\!A}
+	\end{equation} \usetagform{default} \footnotetext{The Nautical Almanac, Sight Reduction Procedures, section 8}
+
+	In addition to the Moon, the Sun needs a small parallax correction. The mean solar $\mathit{HP}$ of $0.1466'$ is used to calculate solar parallax in this table.\footnotemark \footnotetext{Astronomical Algorithms, eq. 40.1}
+	Venus and Mars also require parallax corrections. Their horizontal parallaxes are listed on the bottom of Nautical Almanac page 259, which uses the variable ``p''.
+	
+	Let $c_{rp}$ be the combined correction for refraction and parallax in arcminutes, calculated individually for the Moon, Sun, Venus, or Mars.
+	\begin{equation}
+		c_{rp} = c_r - \mathit{PA}
+	\end{equation}
+
+	The cryptic quantity ``Q'' is related to the $\frac{\cos S \cos M}{\cos s \cos m}$ part of Stark's formula, and is used later in the workform. Q is equal to the logarithm of this fraction, multiplied by $-100000$, and rounded to the nearest tenth. To obtain Q, the ``sub-Q'' of the Moon is added to that of the other body. For the sake of avoiding negative numbers in the workform, 12.2 is added to the sub-Q of the Sun, planets, and stars, and correspondingly subtracted from the sub-Q of the Moon.
+	\begin{align}
+		Q_{moon} &= -100000 \log \left(\frac{\cos(M_{\!A}+c_{rp})}{\cos M_{\!A}}\right) - 12.2 \\
+		Q_{body} &= -100000 \log \left(\frac{\cos(S_{\!A}+c_{rp})}{\cos S_{\!A}}\right) + 12.2
+	\end{align}
+
+\clearpage \section{Table 4: Topocentric Lunar Semidiameter}
+	The lunar semidiameter correction in Table 1 is geocentric, meaning it applies to an observer located at the center of the earth. Because the observer is closer to the moon, the observed, topocentric semidiameter is larger than the geocentric semidiameter. Topocentric semidiameter is not used in Table 1 because it requires the apparent altitude to be known. Let $s_m$ be the Moon's topocentric semidiameter in arcminutes.
+
+	\begin{equation}
+		s_m = s_{mg} \left( 1 + \sin M_{\!A} \sin \mathit{HP} \right)
+	\end{equation}
+
+\section{Table 5: Solar Semidiameter}
+	Table 5 contains the Sun's semidiameter in intervals of five days, to account for seasonal changes in the distance between the Sun and the Earth. Constructing this table from orbital equations is outside the scope of this paper, but \textit{Astronomical Algorithms} by Jean Meeus is a recommended resource for those who wish to do so. In the absence of Table 5, the solar semidiameter can be taken from the almanac daily pages at the same time as the lunar \textit{HP}.
+
+\section{Table 6: Apparent Reduction of Semidiameter}
+	When the Moon or Sun is at an altitude of less than 30 degrees, its shape will be measurably flattened by the differing refraction angle from the top to the bottom of the disk. The flattening reduces the apparent semidiameter and may have the effect of erroneously increasing the measured lunar distance. Table 6 gives a correction for the flattening at various sight angles from vertical. When using the table, carefully consider the unpredictability of refraction at lower altitudes. So that the table may be used with the Sun or Moon, a compromise semidiameter of 16 arcminutes is used. Given a refraction correction function \textit{ref}, apparent altitude $H_{\!A}$, and angle from the vertical $\alpha$, a close approximation of the apparent reduction of semidiameter is given by
+	\begin{equation}
+		\left[\text{ref}(H_{\!A}) - \text{ref}\left(H_{\!A} + \frac{16'}{60}\cos\alpha\right)\right]\cos\alpha
+	\end{equation}
+
+\section{Table K: Log Haversine}
+	Table K is of the function:
+	\begin{equation}
+		K(\theta) = -\log(\hav\theta)
+	\end{equation}
+
+\section{Table Gaussians}
+	The Gaussian addition logarithm is a tool used to find the logarithm of the sum of values ``inside of'' two logarithms, without knowing the values themselves. For example, $\log(x)$ and $\log(y)$ are known, but not the values of $x$ or $y$. Then,
+	\begin{equation}
+		\log(|x| + |y|) = \log(x) + s(\log(y) - \log(x))
+	\end{equation}
+	The sum function is defined as
+	\begin{equation}
+		s(z) = \log(1 + 10^z)
+	\end{equation}
+	The ``Gaussians'' table is of the sum function. To generate the table, the inverse of the sum function is used. Half of the least significant digit is subtracted from $s$ for rounding.
+	\begin{equation}
+		z(s) = -log(10^{s-0.000005}-1)
+	\end{equation}
+
+\section{Table Log Dec.}
+	The ``Log Dec.'' table, or logarithm declination table, is of the function:
+	\begin{equation}
+		L(\theta) = -\log(\cos\theta)
+	\end{equation}
+	To generate the table, the inverse function is used. Half of the least significant digit is subtracted from L for rounding.
+	\begin{equation}
+		\theta(L) = \arccos(10^{-L-0.000005})
+	\end{equation}
+
+\section{Table 7}
+	Table 7, used in time interpolation, uses the following logarithm. Let $d$ be decimal degrees.
+	\begin{equation}
+		f(d) = -\log\left(\frac{d}{4}\right)
+	\end{equation}
+
+\section{Table 8}
+	Table 8, used in time interpolation, is a simple logarithm of hours. Let $m$ be time in decimal minutes.
+	\begin{equation}
+		f(m) = -\log\left(\frac{m}{60}\right)
+	\end{equation}
+
+\clearpage \section{Lunar Distance Workform}
+	\begin{centering}\resizebox{\textwidth}{!}{%
+		\input{distance-workform.tex}%
+	}\end{centering}
+
+\clearpage \section{Operation of the Lunar Distance Workform}
+	\begin{enumerate}
+		\item Write the date, time, and body sighted. It is strongly recommended to use interpolation methods to adjust the altitude sights to time of the distance sight for a ``common time.''
+		\item From the Nautical Alamanac, copy the Moon's HP for the nearest hour to the workform. If Venus or Mars were used, copy their ``p.'' from page 259 of the Almanac.
+		\item Place the sextant altitudes for the Moon and other body in the spaces on the top row. Circle the part of each diagram that represents the limb that was brought to the horizon. 
+		\item Enter Table 1 and find the corrections for the Moon and other body. Place the two corrections, including sign, on the second row of the form.
+		\item Add the Table 1 corrections to the sextant altitudes to yield Sa and Ma, the apparent altitudes of the centers. Sextant index errors are cancelled out in Ma$\sim$Sa, and typical index errors have only a very small effect on tables 2 and 3.
+		\item Using Ma, enter Table 2 and place the r\&p correction and Q into the workform, with increments on the second line provided for Table 2.
+		\item Using Sa, enter Table 3 and place the r\&p correction and Q into the workform.
+		\item Add the three lines from tables 2 and 3, summing r\&p and Q separately.
+		\item Go back to Ma and Sa. Copy the smaller angle beneath the other and subtract to get the difference of apparent altitudes, Ma$\sim$Sa.
+		\item Copy the summed r\&p correction directly under the Ma$\sim$Sa sum, rounding to the nearest tenth.
+		\item Add or subtract the r\&p correction from Ma$\sim$Sa according to the sign in place, yelding H$\sim$H, the true difference of altitudes. This is equivalent to $M-S$ in Stark's formula.
+		\item Enter Table 4 and place the Moon's semidiameter on the form. If the Sun was used in the sight, take its adjusted semidiameter from Table 5. If one of the bodies was less than 30 degrees above the horizon, take the correction from Table 6. Sum these corrections for the total semidiameter correction.
+		\item Enter the sextant distance Ds, if you have not already. Enter the instrument's index error, with positive or negative sign. Sum the two lines.
+		\item Bring the semidiameter correction to the left, rounding to the nearest tenth. The terms ``near limb'' and ``far limb'' refer to whether the body was brought to the limb of the Moon nearest to it, or across the face of the moon to the far side. Sun lunars are always to the near limb, because the Sun illuminates the Moon. Write the appropriate sign according to the limb used.
+		\item Add Ds to the semidiameter correction to get Da, the apparent distance.
+		\item Bring down Ma$\sim$Sa and subtract it from Da. Then add it to Da. These two lines are equivalent to $d+(m-s)$ and $d-(m-s)$ in Stark's formula.
+		\item Take the two lines and look them up in the K Table. Write the values where the dashed arrows point. Then add them together and write the sum on the line below. The sum is equivalent to $-\log[\hav(d+(m-s) \hav(d-(m-s))]$.
+		\item Take half of the sum and write it on the indicated line. Bring down Q. Add together the half-sum and Q. This is equivalent to $-\log[\sqrt{\hav(d+(m-s) \hav(d-(m-s))}\frac{\cos S \cos M}{\cos s \cos m}]$
+		\item Find the K function of H$\sim$H and write it on the line to the left. This is equivalent to $-\log[\hav(M-S)]$.
+		\item There are now two logarithms on the third row from the bottom. Copy the smaller one beneath the other and subtract, writing the difference on the line below.
+		\item Take the difference and enter the Gaussian table. Write the output of the table on the remaining space in the second row from the bottom. Immediately cross out the number used to enter the Gaussian table to eliminate confusion. Subtract the Gaussian output from the logarithm above. The difference is equal to the K of the lunar distance. 
+		\item Use the K table in reverse to find the cleared lunar distance, D.
+	\end{enumerate}
+
+\end{document}
